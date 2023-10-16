@@ -45,7 +45,7 @@ const createMessages = () =>
   Array.from({length: getInt(1, 2)},
     () => getElement(MESSAGES)).join(' ');
 
-const getPicId = () => {
+const getId = () => {
   let previousId = 0;
   return () => {
     previousId++;
@@ -53,18 +53,21 @@ const getPicId = () => {
   };
 };
 
-const getCommentsId = () => {
+const getPicId = getId();
+
+const getRandomId = () => {
   const ids = [];
   return () => {
-    let id = getInt(1, Infinity);
+    let id = getInt(1, 500);
     while (ids.includes(id)){
-      id = getInt(1, Infinity);
+      id = getInt(1, 500);
     }
     ids.push(id);
     return id;
   };
 };
 
+const getCommentsId = getRandomId();
 
 const createComment = () => ({
   id: getCommentsId(),
@@ -79,9 +82,9 @@ const createObject = (id) => ({
   likes: getInt(15, 200),
   description: getElement(DESCRIPTIONS),
   name: getElement(NAMES),
-  comments: Array.from({ length: getCommentsId(0, 30) }, () => createComment())
+  comments: Array.from({ length: getInt(0, 30) }, () => createComment())
 });
 
-const getObjects = () => Array.from({ length: 25 }, createObject(getPicId()));
+const getObjects = () => Array.from({ length: 25 }, () => createObject(getPicId()));
 
 getObjects();
