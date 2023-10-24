@@ -32,3 +32,14 @@ const findNumbers = function(str) {
 };
 
 findNumbers(1.5);
+
+const getTimeInMinutes = function(time) {
+  const timeArray = time.split(':');
+  return Number(timeArray[0]) * 60 + Number(timeArray[1]);
+};
+
+const checkTime = function(start, finish, startConferention, length) {
+  const intStartConferention = getTimeInMinutes(startConferention);
+  return (getTimeInMinutes(start) <= intStartConferention) && (intStartConferention + length <= getTimeInMinutes(finish));
+};
+checkTime('8:00', '17:30', '08:00', 90);
