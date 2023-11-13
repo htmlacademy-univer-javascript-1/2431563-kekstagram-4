@@ -1,2 +1,3 @@
 import { getObjects } from './modules/createObjects';
-getObjects();
+import { renderingThumbnails } from './modules/renderingThumbnails';
+renderingThumbnails(getObjects());
