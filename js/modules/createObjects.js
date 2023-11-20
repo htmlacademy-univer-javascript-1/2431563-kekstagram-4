@@ -1,4 +1,4 @@
-import {NAMES, DESCRIPTIONS, MESSAGES} from './constant.js';
+import {NAMES, DESCRIPTIONS, MESSAGES} from './constants.js';
 import { getInt, getElement } from './utils.js';
 
 const createMessages = () =>
@@ -46,7 +46,5 @@ const createObject = (id) => ({
 });
 
 const getObjects = () => Array.from({ length: 25 }, () => createObject(getPicId()));
-
-getObjects();
 
 export {getObjects};
