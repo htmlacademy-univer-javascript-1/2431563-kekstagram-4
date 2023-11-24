@@ -1,20 +1,53 @@
+
+
 const bigPicture = document.querySelector('.big-picture');
 const removeButton = bigPicture.querySelector('.big-picture__cancel');
+const body = document.querySelector('body');
+let picture;
+
 const img = bigPicture.querySelector('.big-picture__img img');
 const likesCount = bigPicture.querySelector('.likes-count');
-const commentsCount = bigPicture.querySelector('.comments-count');
-const body = document.querySelector('body');
 const socialCaption = bigPicture.querySelector('.social__caption');
-const comment = document.querySelector('.social__comment');
-const commentsList = document.querySelector('.social__comments');
+const commentsCount = bigPicture.querySelector('.comments-count');
+
 const commentsCountBlock = bigPicture.querySelector('.social__comment-count');
 const commentsLoader = bigPicture.querySelector('.comments-loader');
+const comment = document.querySelector('.social__comment');
+const commentsList = document.querySelector('.social__comments');
+
+const NUMBER_OF_COMMENTS_TO_UPLOAD = 5;
+let numberOfCommentsShown = NUMBER_OF_COMMENTS_TO_UPLOAD;
+
+const createCommentsList = (items) => {
+  commentsList.innerHTML = '';
+  commentsLoader.classList.remove('hidden');
+  const fragment = document.createDocumentFragment();
+  const listOfComments = [];
+  items.forEach((item) => {
+    if (listOfComments.length < numberOfCommentsShown) {
+      listOfComments.push(item);
+      const newComment = comment.cloneNode(true);
+      newComment.querySelector('.social__picture').alt = item.name;
+      newComment.querySelector('.social__picture').src = item.avatar;
+      newComment.querySelector('.social__text').textContent = item.message;
+      fragment.append(newComment);
+    }
+  });
+  if (listOfComments.length >= items.length) {
+    commentsLoader.classList.add('hidden');
+  }
+  commentsCountBlock.textContent = `${listOfComments.length} из ${items.length} комментариев`;
+  commentsList.append(fragment);
+};
 
 const openPicture = () => {
   bigPicture.classList.remove('hidden');
   body.classList.add('modal-open');
-  commentsCountBlock.classList.add('hidden');
-  commentsLoader.classList.add('hidden');
+  img.src = picture.url;
+  likesCount.textContent = picture.likes;
+  commentsCount.textContent = picture.comments.length;
+  socialCaption.textContent = picture.description;
+  createCommentsList(picture.comments);
 };
 
 const closePicture = () => {
@@ -29,38 +62,21 @@ const escapeKeydown = (event) => {
   }
 };
 
-const getComment = (item) => {
-  const newComment = comment.cloneNode(true);
-  newComment.querySelector('.social__picture').alt = item.name;
-  newComment.querySelector('.social__picture').src = item.avatar;
-  newComment.querySelector('.social__text').textContent = item.message;
-  return newComment;
-};
-
-const getCommentsList = (items) => {
-  commentsList.innerHTML = '';
-  const fragment = document.createDocumentFragment();
-  items.forEach((item) => {
-    fragment.append(getComment(item));
-  });
-  commentsList.append(fragment);
-};
-
-const getPictureDetails = (item) => {
-  img.src = item.url;
-  likesCount.textContent = item.likes;
-  commentsCount.textContent = item.comments.length;
-  socialCaption.textContent = item.description;
-  getCommentsList(item.comments);
+const loadComments = () => {
+  numberOfCommentsShown += NUMBER_OF_COMMENTS_TO_UPLOAD;
+  createCommentsList(picture.comments);
 };
 
 const renderingBigPicture = (items) => {
-  const picturesList = document.querySelectorAll('.picture');
-  picturesList.forEach((item) => {
-    item.addEventListener('click', () => {
-      openPicture();
-      getPictureDetails(items[item.dataset.id - 1]);
-    });
+  const pictures = document.querySelector('.pictures');
+  commentsLoader.addEventListener('click', loadComments);
+  pictures.addEventListener('click', (event) => {
+    event.preventDefault();
+    const clickThumbnail = event.target.closest('[data-id]');
+    if (clickThumbnail) {
+      picture = items.find((item) => item.id === +clickThumbnail.dataset.id);
+    }
+    openPicture();
   });
   removeButton.addEventListener('click', closePicture);
   document.addEventListener('keydown', escapeKeydown);
