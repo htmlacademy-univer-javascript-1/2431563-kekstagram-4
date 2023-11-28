@@ -71,12 +71,12 @@ const renderingBigPicture = (items) => {
   const pictures = document.querySelector('.pictures');
   commentsLoader.addEventListener('click', loadComments);
   pictures.addEventListener('click', (event) => {
-    event.preventDefault();
     const clickThumbnail = event.target.closest('[data-id]');
     if (clickThumbnail) {
+      event.preventDefault();
       picture = items.find((item) => item.id === +clickThumbnail.dataset.id);
+      openPicture();
     }
-    openPicture();
   });
   removeButton.addEventListener('click', closePicture);
   document.addEventListener('keydown', escapeKeydown);

@@ -33,4 +33,8 @@ const MESSAGES = [
   'Лица у людей на фотке перекошены, как будто их избивают. Как можно было поймать такой неудачный момент?!',
 ];
 
-export {NAMES, DESCRIPTIONS, MESSAGES};
+const MAXIMUM_HASHTAGS_NUMBER = 5;
+const VALID_HASHTAG = /^#[a-zа-яё0-9]{1,19}$/i;
+const MAXIMUM_COMMENT_LENGTH = 140;
+
+export {NAMES, DESCRIPTIONS, MESSAGES, MAXIMUM_HASHTAGS_NUMBER, VALID_HASHTAG, MAXIMUM_COMMENT_LENGTH};
