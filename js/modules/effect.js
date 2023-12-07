@@ -1,4 +1,4 @@
-import { EFFECTS } from './constants';
+import { EFFECTS } from './constants.js';
 
 const img = document.querySelector('.img-upload__preview img');
 const effects = document.querySelector('.effects');
