@@ -1,4 +1,6 @@
 import { MAXIMUM_COMMENT_LENGTH, MAXIMUM_HASHTAGS_NUMBER, VALID_HASHTAG } from './constants.js';
+import { resetFilters } from './effect.js';
+import { resetScale } from './scale.js';
 
 const body = document.querySelector('body');
 const form = document.querySelector('.img-upload__form');
@@ -86,6 +88,8 @@ const openImage = () => {
   body.classList.add('modal-open');
   document.addEventListener('keydown', escapeKeydown);
   canselButton.addEventListener('click', closeImage);
+  resetScale();
+  resetFilters();
 };
 
 file.addEventListener('input', openImage);
