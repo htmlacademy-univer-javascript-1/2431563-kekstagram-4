@@ -9,6 +9,7 @@ const imgOverlay = form.querySelector('.img-upload__overlay');
 const canselButton = form.querySelector('#upload-cancel');
 const hashtagsField = form.querySelector('.text__hashtags');
 const commentsField = form.querySelector('.text__description');
+const image = document.querySelector('.img-upload__preview img');
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -93,3 +94,19 @@ const openImage = () => {
 };
 
 file.addEventListener('input', openImage);
+
+file.addEventListener('change', (event) => {
+  const newImage = event.target.files[0];
+  if (newImage) {
+    image.src = URL.createObjectURL(newImage);
+  }});
+
+const setOnFormSubmit = (callback) => {
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    if (pristine.validate()) {
+      await callback(new FormData(form));
+    }});
+};
+
+export { setOnFormSubmit, closeImage };

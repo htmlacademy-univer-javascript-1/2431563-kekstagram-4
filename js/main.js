@@ -1,9 +1,24 @@
-import { getObjects } from './modules/createObjects.js';
 import { renderingThumbnails } from './modules/renderingThumbnails.js';
 import { renderingBigPicture } from './modules/renderingBigPicture.js';
-import './modules/form.js';
+import { getData, sendData } from './modules/api.js';
+import { setOnFormSubmit, closeImage } from './modules/form.js';
+import { showErrorModal, showSuccessModal } from './modules/createModal.js';
 import './modules/effect.js';
 import './modules/scale.js';
-const objects = getObjects();
-renderingThumbnails(objects);
-renderingBigPicture(objects);
+
+setOnFormSubmit(async (data) => {
+  try {
+    await sendData(data);
+    closeImage();
+    showSuccessModal();
+  }
+  catch (error) {
+    closeImage();
+    showErrorModal();
+  }
+});
+
+getData().then((items) => {
+  renderingThumbnails(items);
+  renderingBigPicture(items);
+});
