@@ -1,3 +1,4 @@
+import { renderingBigPicture } from './renderingBigPicture.js';
 const thumbnailConstructor = document.querySelector('.pictures');
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
@@ -12,11 +13,15 @@ const getThumbnail = (item) => {
 };
 
 const renderingThumbnails = (items) => {
+  thumbnailConstructor.querySelectorAll('.picture').forEach((item) => {
+    item.remove();
+  });
   const documentFragment = document.createDocumentFragment();
   items.forEach((item) => {
     documentFragment.append(getThumbnail(item));
   });
   thumbnailConstructor.appendChild(documentFragment);
+  renderingBigPicture(items);
 };
 
 export { renderingThumbnails };

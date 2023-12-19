@@ -1,9 +1,6 @@
-
-
 const bigPicture = document.querySelector('.big-picture');
 const removeButton = bigPicture.querySelector('.big-picture__cancel');
 const body = document.querySelector('body');
-let picture;
 
 const img = bigPicture.querySelector('.big-picture__img img');
 const likesCount = bigPicture.querySelector('.likes-count');
@@ -17,6 +14,7 @@ const commentsList = document.querySelector('.social__comments');
 
 const NUMBER_OF_COMMENTS_TO_UPLOAD = 5;
 let numberOfCommentsShown = NUMBER_OF_COMMENTS_TO_UPLOAD;
+let picture;
 
 const createCommentsList = (items) => {
   commentsList.innerHTML = '';
