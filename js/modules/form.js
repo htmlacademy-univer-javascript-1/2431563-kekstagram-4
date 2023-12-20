@@ -10,6 +10,8 @@ const canselButton = form.querySelector('#upload-cancel');
 const hashtagsField = form.querySelector('.text__hashtags');
 const commentsField = form.querySelector('.text__description');
 const image = document.querySelector('.img-upload__preview img');
+const effectImage = document.querySelectorAll('.effects__preview');
+
 
 const pristine = new Pristine(form, {
   classTo: 'img-upload__field-wrapper',
@@ -95,10 +97,18 @@ const openImage = () => {
 
 file.addEventListener('input', openImage);
 
+const changeEffectPreviewImage = (newItem) => {
+  effectImage.forEach((item) => {
+    item.style.backgroundImage = `url('${newItem}')`;
+  });
+};
+
 file.addEventListener('change', (event) => {
   const newImage = event.target.files[0];
   if (newImage) {
-    image.src = URL.createObjectURL(newImage);
+    const url = URL.createObjectURL(newImage);
+    image.src = url;
+    changeEffectPreviewImage(url);
   }});
 
 const setOnFormSubmit = (callback) => {
