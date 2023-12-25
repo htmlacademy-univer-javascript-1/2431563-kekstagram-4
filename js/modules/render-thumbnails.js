@@ -1,4 +1,4 @@
-import { renderingBigPicture } from './renderingBigPicture.js';
+import { renderingBigPicture } from './render-big-picture.js';
 const thumbnailConstructor = document.querySelector('.pictures');
 const thumbnailTemplate = document.querySelector('#picture').content.querySelector('.picture');
 
@@ -12,7 +12,7 @@ const getThumbnail = (item) => {
   return thumbnail;
 };
 
-const renderingThumbnails = (items) => {
+const renderThumbnails = (items) => {
   thumbnailConstructor.querySelectorAll('.picture').forEach((item) => {
     item.remove();
   });
@@ -24,4 +24,4 @@ const renderingThumbnails = (items) => {
   renderingBigPicture(items);
 };
 
-export { renderingThumbnails };
+export { renderThumbnails };

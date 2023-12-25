@@ -1,5 +1,7 @@
 import { MAXIMUM_COMMENT_LENGTH, MAXIMUM_HASHTAGS_NUMBER, VALID_HASHTAG } from './constants.js';
 import { resetFilters } from './effect.js';
+import { sendData } from './api.js';
+import { showErrorModal, showSuccessModal } from './create-modal.js';
 import { resetScale } from './scale.js';
 
 const body = document.querySelector('body');
@@ -8,6 +10,7 @@ const file = form.querySelector('#upload-file');
 const imgOverlay = form.querySelector('.img-upload__overlay');
 const canselButton = form.querySelector('#upload-cancel');
 const hashtagsField = form.querySelector('.text__hashtags');
+const buttonCloseOverlay = form.querySelector('#upload-cancel');
 const commentsField = form.querySelector('.text__description');
 const image = document.querySelector('.img-upload__preview img');
 const effectImage = document.querySelectorAll('.effects__preview');
@@ -32,7 +35,7 @@ hashtagsField.addEventListener('keydown', (event) => {
 
 const checkCorrectCommentLength = (items) => items.length < MAXIMUM_COMMENT_LENGTH;
 
-const getSplitHashtag = (items) =>  items.trim().split(' ');
+const getSplitHashtag = (items) => items.trim().split(' ').filter((tag) => tag.trim().length);
 
 const checkCorrectHashtagsNumber = (items) => getSplitHashtag(items).length <= MAXIMUM_HASHTAGS_NUMBER;
 
@@ -40,7 +43,7 @@ const checkValidHashtag = (hashtags) => {
   const items = getSplitHashtag(hashtags);
   let flag = true;
   for (let i = 0; i < items.length; i++) {
-    if (!VALID_HASHTAG.test(items[i])){
+    if (!VALID_HASHTAG.test(items[i])) {
       flag = false;
       break;
     }
@@ -109,14 +112,40 @@ file.addEventListener('change', (event) => {
     const url = URL.createObjectURL(newImage);
     image.src = url;
     changeEffectPreviewImage(url);
-  }});
+  }
+});
 
-const setOnFormSubmit = (callback) => {
-  form.addEventListener('submit', async (event) => {
-    event.preventDefault();
-    if (pristine.validate()) {
-      await callback(new FormData(form));
-    }});
+const blockSubmitButton = () => {
+  buttonCloseOverlay.disabled = true;
+  buttonCloseOverlay.textContent = 'Загружаю';
 };
 
-export { setOnFormSubmit, closeImage };
+const unblockSubmitButton = () => {
+  buttonCloseOverlay.disabled = false;
+  buttonCloseOverlay.textContent = 'Загрузить';
+};
+
+const onFormSubmit = () => {
+  form.addEventListener('submit', (evt) => {
+    evt.preventDefault();
+
+    if (pristine.validate()) {
+      const formData = new FormData(form);
+
+      blockSubmitButton();
+      sendData(formData)
+        .then(() => {
+          closeImage();
+          showSuccessModal();
+        })
+        .catch(() => {
+          closeImage();
+          showErrorModal();
+        })
+        .finally(unblockSubmitButton);
+    }
+  });
+};
+
+
+export { onFormSubmit, closeImage, openImage };
