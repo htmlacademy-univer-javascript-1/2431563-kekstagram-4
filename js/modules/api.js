@@ -1,17 +1,19 @@
-const getData = () =>
-  fetch('https://29.javascript.pages.academy/kekstagram/data')
+import { BASE_URL, Method, Route, ServerErrorMessage } from './constants.js';
+
+const load = (route, errorText, method = Method.GET, body = null) =>
+  fetch(`${BASE_URL}${route}`, { method, body })
     .then((response) => {
-      if (response.ok) {
-        return response.json();
+      if (!response.ok) {
+        throw new Error(`Произошла ошибка ${response.status}: ${response.statusText}`);
       }
-      throw new Error();
+      return response.json();
+    })
+    .catch(() => {
+      throw new Error(errorText);
     });
 
-const sendData = (body) =>
-  fetch('https://29.javascript.pages.academy/kekstagram',
-    {
-      method: 'POST',
-      body: body,
-    });
+const getData = () => load(Route.GET_DATA, ServerErrorMessage.GET_DATA);
 
-export {sendData, getData};
+const sendData = (body) => load(Route.SEND_DATA, ServerErrorMessage.POST_DATA, Method.POST, body);
+
+export { getData, sendData };

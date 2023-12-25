@@ -16,11 +16,16 @@ const NUMBER_OF_COMMENTS_TO_UPLOAD = 5;
 let numberOfCommentsShown = NUMBER_OF_COMMENTS_TO_UPLOAD;
 let picture;
 
+const resetCommentsCount = () => {
+  numberOfCommentsShown = NUMBER_OF_COMMENTS_TO_UPLOAD;
+};
+
 const createCommentsList = (items) => {
   commentsList.innerHTML = '';
   commentsLoader.classList.remove('hidden');
   const fragment = document.createDocumentFragment();
   const listOfComments = [];
+
   items.forEach((item) => {
     if (listOfComments.length < numberOfCommentsShown) {
       listOfComments.push(item);
@@ -31,11 +36,20 @@ const createCommentsList = (items) => {
       fragment.append(newComment);
     }
   });
+
   if (listOfComments.length >= items.length) {
     commentsLoader.classList.add('hidden');
   }
+
   commentsCountBlock.textContent = `${listOfComments.length} из ${items.length} комментариев`;
   commentsList.append(fragment);
+};
+
+const closePicture = () => {
+  bigPicture.classList.add('hidden');
+  body.classList.remove('modal-open');
+  document.removeEventListener('keydown', onDocumentKeydown);
+  removeButton.removeEventListener('click', closePicture);
 };
 
 const openPicture = () => {
@@ -45,20 +59,19 @@ const openPicture = () => {
   likesCount.textContent = picture.likes;
   commentsCount.textContent = picture.comments.length;
   socialCaption.textContent = picture.description;
+
+  document.addEventListener('keydown', onDocumentKeydown);
+  removeButton.addEventListener('click', closePicture);
+  resetCommentsCount();
   createCommentsList(picture.comments);
 };
 
-const closePicture = () => {
-  bigPicture.classList.add('hidden');
-  body.classList.remove('modal-open');
-};
-
-const escapeKeydown = (event) => {
+function onDocumentKeydown(event) {
   if (event.key === 'Escape') {
     closePicture();
     event.preventDefault();
   }
-};
+}
 
 const loadComments = () => {
   numberOfCommentsShown += NUMBER_OF_COMMENTS_TO_UPLOAD;
@@ -68,6 +81,7 @@ const loadComments = () => {
 const renderingBigPicture = (items) => {
   const pictures = document.querySelector('.pictures');
   commentsLoader.addEventListener('click', loadComments);
+
   pictures.addEventListener('click', (event) => {
     const clickThumbnail = event.target.closest('[data-id]');
     if (clickThumbnail) {
@@ -76,8 +90,6 @@ const renderingBigPicture = (items) => {
       openPicture();
     }
   });
-  removeButton.addEventListener('click', closePicture);
-  document.addEventListener('keydown', escapeKeydown);
 };
 
 export { renderingBigPicture };
